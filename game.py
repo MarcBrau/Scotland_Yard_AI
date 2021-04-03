@@ -44,7 +44,8 @@ class Game:
         self.edges = edges
         self.num_edges = len(edges)
 
-        self.board = Board(self.nodes, self.edges, self.players)
+        # self.board = Board(self.nodes, self.edges, self.players)
+        self.board = Board(self.nodes, self.edges)
 
         # Connect board and players
         for player in self.players:
@@ -83,7 +84,8 @@ class Game:
 
     def getInitBoard(self):
         # return initial board (numpy board)
-        return np.array(self.board.init_pieces)
+        init_board = Board(self.nodes, self.edges)
+        return init_board
 
     def stringRepresentation(self, board):
         return board.tostring()
@@ -121,7 +123,7 @@ class Game:
             status_detective = detective.get_status()
             status_detectives += "\n" + status_detective
         status_game = "Status game: \n" \
-                       "Current round: {} \n".format(self.round_index)
+                      "Current round: {} \n".format(self.round_index)
         status = status_game + "\n" + status_x + "\n" + status_detectives
         return status
 
@@ -188,8 +190,8 @@ class Game:
 
         # Todo: Convert action to move
         # move = (int(action/self.n), action%self.n)
-        self.board.move_player(move, player)
+        self.board.move_player(action, player)
         # Todo: How to get next player, outside of this routine, something like:
         # for player in players:
         # get_next_state(player, action)...
-        return (self.board.pieces, -player)
+        return self.board.pieces, -player

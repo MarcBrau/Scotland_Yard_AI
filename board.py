@@ -9,7 +9,8 @@ class Board:
     This class represents one transportation network consisting of nodes and edges.
     """
 
-    def __init__(self, nodes, edges, players):
+    # def __init__(self, nodes, edges, players):
+    def __init__(self, nodes, edges):
         """
         Init-function of the Board-class.
         :param nodes: List of nodes which are part of the network
