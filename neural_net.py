@@ -11,7 +11,7 @@ from utils import average_meter
 from NeuralNet import NeuralNet
 
 
-from scotland_yard_nnet import ScotalandYardNNet as synnet
+from scotland_yard_nnet import ScotlandYardNNet as synnet
 
 args = dict({
     'lr': 0.001,

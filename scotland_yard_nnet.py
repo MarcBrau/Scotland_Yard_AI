@@ -6,11 +6,13 @@ import tensorflow as tf
 from tensorflow import keras
 layers = keras.layers
 
-class ScotalandYardNNet():
+
+class ScotlandYardNNet():
     def __init__(self, game, args):
         # game params
         # self.board_x, self.board_y = game.getBoardSize()
         self.action_size = game.getActionSize()
+        self.board_size = game.getBoardSize()
         self.args = args
 
         # Renaming functions 
@@ -22,23 +24,9 @@ class ScotalandYardNNet():
 
         # Neural Net
         # Todo: Define shape
-        input_image = layers.Input(shape=)
-        conv_1 = layers.Conv2D(filters=args.num_channels, kernel_size=[3,3], activation='relu', padding='same',
-                          use_bias=False)(input_image)
-        # Todo: Correct axis for batchnorm?
-        batch_1 = layers.BatchNormalization(axis=3)(conv_1)
-        conv_2 = layers.Conv2D(filters=args.num_channels, kernel_size=[3, 3], activation='relu', padding='same',
-                          use_bias=False)(batch_1)
-        batch_2 = layers.BatchNormalization(axis=3)(conv_2)
-        conv_3 = layers.Conv2D(filters=args.num_channels, kernel_size=[3, 3], activation='relu', padding='valid',
-                          use_bias=False)(batch_2)
-        batch_3 = layers.BatchNormalization(axis=3)(conv_3)
-        conv_4 = layers.Conv2D(filters=args.num_channels, kernel_size=[3, 3], activation='relu', padding='valid',
-                          use_bias=False)(batch_3)
-        batch_4 = layers.BatchNormalization(axis=3)(conv_4)
-        flat_1 = layers.Flatten()(batch_4)
+        input_layer = layers.Input(shape=[None, self.board_size])
         # Todo: Use absl for flags
-        dense_1 = layers.Dense(1024, activation='relu', use_bias=False)(flat_1)
+        dense_1 = layers.Dense(1024, activation='relu', use_bias=False)(input_layer)
         # Todo: Correct axis for batchnorm?
         batch_5 = layers.BatchNormalization(axis=1)(dense_1)
         drop_1 = layers.Dropout(self.args.dropout)(batch_5)
@@ -50,7 +38,7 @@ class ScotalandYardNNet():
         dense_3 = layers.Dense(1)(drop_2)
         self.v = Tanh(dense_3)
 
-        self.model = keras.models.Model(inputs=input_image, outputs=[self.pi, self.v])
+        self.model = keras.models.Model(inputs=input_layer, outputs=[self.pi, self.v])
 
         print(self.model.summary())
 
@@ -82,9 +70,23 @@ class ScotalandYardNNet():
             self.v = Tanh(Dense(s_fc2, 1))                                                               # batch_size x 1
 
             self.calculate_loss()"""
+        """conv_1 = layers.Conv2D(filters=args.num_channels, kernel_size=[3, 3], activation='relu', padding='same',
+                                  use_bias=False)(input_image)
+                # Todo: Correct axis for batchnorm?
+                batch_1 = layers.BatchNormalization(axis=3)(conv_1)
+                conv_2 = layers.Conv2D(filters=args.num_channels, kernel_size=[3, 3], activation='relu', padding='same',
+                                  use_bias=False)(batch_1)
+                batch_2 = layers.BatchNormalization(axis=3)(conv_2)
+                conv_3 = layers.Conv2D(filters=args.num_channels, kernel_size=[3, 3], activation='relu', padding='valid',
+                                  use_bias=False)(batch_2)
+                batch_3 = layers.BatchNormalization(axis=3)(conv_3)
+                conv_4 = layers.Conv2D(filters=args.num_channels, kernel_size=[3, 3], activation='relu', padding='valid',
+                                  use_bias=False)(batch_3)
+                batch_4 = layers.BatchNormalization(axis=3)(conv_4)
+                flat_1 = layers.Flatten()(batch_4)"""
 
     def conv2d(self, x, out_channels, padding):
-      return tf.layers.conv2d(x, out_channels, kernel_size=[3,3], padding=padding, use_bias=False)
+      return tf.layers.conv2d(x, out_channels, kernel_size=[3, 3], padding=padding, use_bias=False)
 
     def calculate_loss(self):
         self.target_pis = tf.placeholder(tf.float32, shape=[None, self.action_size])
