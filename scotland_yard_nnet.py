@@ -4,10 +4,11 @@ from utils import *
 
 import tensorflow as tf
 from tensorflow import keras
+import tensorflow.keras.backend as kb
 layers = keras.layers
 
 
-class ScotlandYardNNet():
+class ScotlandYardNNet:
     def __init__(self, game, args):
         # game params
         # self.board_x, self.board_y = game.getBoardSize()
@@ -46,7 +47,6 @@ class ScotlandYardNNet():
         self.model.compile(
             loss=['softmax', 'mse'],
             optimizer=keras.optimizers.Adam(learning_rate=self.args.lr)
-
         )
         print("Model compiled")
 
@@ -83,20 +83,26 @@ class ScotlandYardNNet():
                 conv_4 = layers.Conv2D(filters=args.num_channels, kernel_size=[3, 3], activation='relu', padding='valid',
                                   use_bias=False)(batch_3)
                 batch_4 = layers.BatchNormalization(axis=3)(conv_4)
-                flat_1 = layers.Flatten()(batch_4)"""
-
+                flat_1 = layers.Flatten()(batch_4)
+                
     def conv2d(self, x, out_channels, padding):
-      return tf.layers.conv2d(x, out_channels, kernel_size=[3, 3], padding=padding, use_bias=False)
-
-    def calculate_loss(self):
-        self.target_pis = tf.placeholder(tf.float32, shape=[None, self.action_size])
+      return tf.layers.conv2d(x, out_channels, kernel_size=[3, 3], padding=padding, use_bias=False)        """
+    
+    # ToDo: Really needed? Model gets compiled with correct losses/optimizer, etc. Maybe no need for this function anymore
+    def calculate_loss(self, target_pis, target_vs):
+        """self.target_pis = tf.placeholder(tf.float32, shape=[None, self.action_size])
         self.target_vs = tf.placeholder(tf.float32, shape=[None])
-        self.loss_pi =  tf.losses.softmax_cross_entropy(self.target_pis, self.pi)
+        self.loss_pi = tf.losses.softmax_cross_entropy(self.target_pis, self.pi)
         self.loss_v = tf.losses.mean_squared_error(self.target_vs, tf.reshape(self.v, shape=[-1,]))
         self.total_loss = self.loss_pi + self.loss_v
         update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
         with tf.control_dependencies(update_ops):
-            self.train_step = tf.train.AdamOptimizer(self.args.lr).minimize(self.total_loss)
+            self.train_step = tf.train.AdamOptimizer(self.args.lr).minimize(self.total_loss)"""
+        self.loss_pi = kb.categorical_crossentropy(target_pis, self.pi)
+        # Todo: Maybe reshape v: tf.reshape(self.v, shape=[-1,])
+        self.loss_v = kb.mean(kb.square(target_vs, self.v))
+        self.total_loss = kb.sum([self.loss_pi, self.loss_v])
+        return self.total_loss
 
 # Todo: Where is this class needed?!
 class ResNet():
