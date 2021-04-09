@@ -41,11 +41,11 @@ class Game:
         self.nodes = [(node_index, {"position": node_positions[node_index], "type": "no_type", "occupied": 0}) for node_index in
                       self.node_indices]
 
+        self.board = Board(self.nodes, self.edges)
+
         self.edges = edges
         self.num_edges = len(edges)
-
-        # self.board = Board(self.nodes, self.edges, self.players)
-        self.board = Board(self.nodes, self.edges)
+        self.num_edges_detectives = self.board.detectives_network.number_of_edges()
 
         # Connect board and players
         for player in self.players:
@@ -60,7 +60,7 @@ class Game:
         # Initialize round index
         self.round_index = 0
 
-    def initialize_players(self,mister_x_color, detective_colors, num_detectives=1):
+    def initialize_players(self, mister_x_color, detective_colors, num_detectives=1):
         # Todo:
         # Todo: Make documentation using this comment
         #  Choose random starting positions of players, drawn from the respective pool of starting position
@@ -90,7 +90,7 @@ class Game:
     def stringRepresentation(self, board):
         return board.tostring()
 
-    def play_game(self, move_by_human=False):
+    """def play_game(self, move_by_human=False):
 
         while True:
             self.round_index += 1
@@ -115,6 +115,7 @@ class Game:
             self.board.move_detectives(self.detectives, by_human=move_by_human)
 
         # Todo: Create game history/summary (Moves of players, used tickets, ...)
+        """
 
     def get_status(self, mister_x, detectives):
         status_x = mister_x.get_status()
@@ -127,7 +128,7 @@ class Game:
         status = status_game + "\n" + status_x + "\n" + status_detectives
         return status
 
-    def is_game_over(self):
+    def is_game_over(self, verbose=0):
         """
         Return 1 if mister_x won, -1 if detectives won, 0 if game is not over
         :param mister_x:
@@ -136,12 +137,14 @@ class Game:
         """
         # Todo: Set correct conditions to end the game
         if self.round_index == 24:
-            print("Mister X accomplished to escape for {} rounds and thus won the game.".format(self.round_index))
+            if verbose:
+                print("Mister X accomplished to escape for {} rounds and thus won the game.".format(self.round_index))
             return 1
         for detective in self.detectives:
             if self.mister_x.get_position() == detective.get_position():
-                print("Mister X was caught in round {} on position {} by detective {}"
-                      .format(self.round_index, self.mister_x.get_position(), detective.get_index()))
+                if verbose:
+                    print("Mister X was caught in round {} on position {} by detective {}"
+                          .format(self.round_index, self.mister_x.get_position(), detective.get_index()))
                 return -1
         return 0
 
@@ -169,14 +172,15 @@ class Game:
         # Todo: what happens when there are no valid moves
         return np.array(valid_moves)
 
-    def get_action_size(self):
+    def get_action_size(self, is_mister_x):
         """
         Used to define the number of neurons in the output layer of the neural network
         :return:
         """
-        # Todo: Think about it!! Not completely clear if that's correct, I mean taking one edge is equal to an action => number of actions = number of edges correct?!
-        # Todo: If correct, then have in mind that the networks of mister_x and the detectives have different number of edges!
-        return self.num_edges
+        if is_mister_x:
+            return self.num_edges
+        else:
+            return self.num_edges_detectives
 
     def get_board_size(self):
         return self.num_nodes
@@ -195,3 +199,6 @@ class Game:
         # for player in players:
         # get_next_state(player, action)...
         return self.board.pieces, -player
+
+    def display(self):
+        draw_graph_and_players(self.board.mister_x_network, self.mister_x, self.detectives, by_human=False)
