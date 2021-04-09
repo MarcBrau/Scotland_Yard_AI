@@ -12,7 +12,7 @@ use this script to play any two agents against each other, or play manually with
 any agent.
 """
 
-human_vs_cpu = True
+
 
 # Initialize nodes
 number_of_nodes = 5
@@ -71,18 +71,18 @@ mister_x_color = 'grey'
 game = Game(number_of_nodes, edges, number_of_detectives, mister_x_color, detective_colors)
 
 
-# all players
-random_player = RandomPlayer(game).play
-greedy_player = GreedyPlayer(game).play
+# Players for Mister X
+#random_player = RandomPlayer(game).play
+#greedy_player = GreedyPlayer(game).play
 human_player = HumanPlayer(game).play
-neural_net_player = NNet(game)
-
+neural_net_mister_x = NNet(game, is_mister_x=True)
 # neural_net_player.load_checkpoint('')
 
-args1 = dict({'numMCTSSims': 50, 'cpuct':1.0})
-mcts1 = MCTS(game, neural_net_player, args1)
+args1 = dict({'numMCTSSims': 50, 'cpuct': 1.0})
+mcts1 = MCTS(game, neural_net_mister_x, args1)
 n1p = lambda x: np.argmax(mcts1.get_action_prob(x, temp=0))
 
+"""human_vs_cpu = False
 if human_vs_cpu:
     player2 = human_player
 else:
@@ -93,8 +93,17 @@ else:
     n2p = lambda x: np.argmax(mcts2.get_action_prob(x, temp=0))
 
     player2 = n2p  # Player 2 is neural network if it's cpu vs cpu.
+"""
+neural_net_detectives = []
+neural_net_detective = NNet(game, is_mister_x=False)
+# n2.load_checkpoint('')
+args2 = dict({'numMCTSSims': 50, 'cpuct': 1.0})
+mcts2 = MCTS(game, neural_net_detective, args2)
+n2p = lambda x: np.argmax(mcts2.get_action_prob(x, temp=0))
+for i in range(number_of_detectives):
+    neural_net_detectives.append(n2p)
 
-arena = Arena.Arena(n1p, player2, game, display=game.display)
+arena = Arena.Arena(n1p, neural_net_detectives, game, display=game.display)
 
 #print(arena.playGames(2, verbose=True))
 print(arena.playGame(verbose=True))
