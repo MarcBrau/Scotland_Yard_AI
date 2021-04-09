@@ -9,10 +9,10 @@ layers = keras.layers
 
 
 class ScotlandYardNNet:
-    def __init__(self, game, args):
+    def __init__(self, game, args, is_mister_x):
         # game params
         # self.board_x, self.board_y = game.getBoardSize()
-        self.action_size = game.getActionSize()
+        self.action_size = game.getActionSize(is_mister_x)
         self.board_size = game.getBoardSize()
         self.args = args
 
@@ -87,7 +87,6 @@ class ScotlandYardNNet:
                 
     def conv2d(self, x, out_channels, padding):
       return tf.layers.conv2d(x, out_channels, kernel_size=[3, 3], padding=padding, use_bias=False)        """
-    
     # ToDo: Really needed? Model gets compiled with correct losses/optimizer, etc. Maybe no need for this function anymore
     def calculate_loss(self, target_pis, target_vs):
         """self.target_pis = tf.placeholder(tf.float32, shape=[None, self.action_size])
