@@ -12,28 +12,29 @@ class ScotlandYardNNet:
     def __init__(self, game, args, is_mister_x):
         # game params
         # self.board_x, self.board_y = game.getBoardSize()
-        self.action_size = game.getActionSize(is_mister_x)
-        self.board_size = game.getBoardSize()
+        self.action_size = game.get_action_size(is_mister_x)
+        self.board_size = game.get_board_size()
         self.args = args
 
         # Renaming functions 
         Relu = tf.nn.relu
         Tanh = tf.nn.tanh
-        BatchNormalization = tf.layers.batch_normalization
-        Dropout = tf.layers.dropout
-        Dense = tf.layers.dense
+        #BatchNormalization = tf.layers.batch_normalization
+        #Dropout = tf.layers.dropout
+        #Dense = tf.layers.dense
 
         # Neural Net
         # Todo: Define shape
-        input_layer = layers.Input(shape=[None, self.board_size])
+        #input_layer = layers.Input(shape=[None, self.board_size])
+        input_layer = layers.Input(shape=[self.board_size])
         # Todo: Use absl for flags
         dense_1 = layers.Dense(1024, activation='relu', use_bias=False)(input_layer)
         # Todo: Correct axis for batchnorm?
         batch_5 = layers.BatchNormalization(axis=1)(dense_1)
-        drop_1 = layers.Dropout(self.args.dropout)(batch_5)
+        drop_1 = layers.Dropout(self.args['dropout'])(batch_5)
         dense_2 = layers.Dense(512, activation='relu', use_bias=False)(drop_1)
         batch_6 = layers.BatchNormalization(axis=1)(dense_2)
-        drop_2 = layers.Dropout(self.args.dropout)(batch_6)
+        drop_2 = layers.Dropout(self.args['dropout'])(batch_6)
         self.pi = layers.Dense(self.action_size)(drop_2)
         self.prob = tf.nn.softmax(self.pi)
         dense_3 = layers.Dense(1)(drop_2)
@@ -46,7 +47,7 @@ class ScotlandYardNNet:
         print("Compile model ...")
         self.model.compile(
             loss=['softmax', 'mse'],
-            optimizer=keras.optimizers.Adam(learning_rate=self.args.lr)
+            optimizer=keras.optimizers.Adam(learning_rate=self.args['lr'])
         )
         print("Model compiled")
 

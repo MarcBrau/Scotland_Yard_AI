@@ -33,7 +33,7 @@ class MCTS:
             probs: a policy vector where the probability of the ith action is
                    proportional to num_s_a[(s,a)]**(1./temp)
         """
-        for i in range(self.args.numMCTSSims):
+        for i in range(self.args['numMCTSSims']):
             self.search(canonical_board)
 
         s = self.game.stringRepresentation(canonical_board)
@@ -109,10 +109,10 @@ class MCTS:
         for a in range(self.game.get_action_size()):
             if valids[a]:
                 if (s, a) in self.q_values_s_a:
-                    u = self.q_values_s_a[(s, a)] + self.args.cpuct * self.nnet_policy_s[s][a] * math.sqrt(self.num_s[s]) / (
+                    u = self.q_values_s_a[(s, a)] + self.args['cpuct'] * self.nnet_policy_s[s][a] * math.sqrt(self.num_s[s]) / (
                             1 + self.num_s_a[(s, a)])
                 else:
-                    u = self.args.cpuct * self.nnet_policy_s[s][a] * math.sqrt(self.num_s[s] + EPS)  # Q = 0 ?
+                    u = self.args['cpuct'] * self.nnet_policy_s[s][a] * math.sqrt(self.num_s[s] + EPS)  # Q = 0 ?
 
                 if u > cur_best:
                     cur_best = u

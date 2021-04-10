@@ -1,4 +1,4 @@
-import Arena
+import arena
 from mcts import MCTS
 from game import Game
 from player_types import *
@@ -103,7 +103,7 @@ n2p = lambda x: np.argmax(mcts2.get_action_prob(x, temp=0))
 for i in range(number_of_detectives):
     neural_net_detectives.append(n2p)
 
-arena = Arena.Arena(n1p, neural_net_detectives, game, display=game.display)
+arena = arena.Arena(n1p, neural_net_detectives, game, display=game.display)
 
-#print(arena.playGames(2, verbose=True))
-print(arena.playGame(verbose=True))
+#print(arena.play_games(2, verbose=True))
+print(arena.play_game(verbose=True))
