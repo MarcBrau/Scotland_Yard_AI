@@ -40,10 +40,10 @@ class Game:
         # occupied = 1: Mister X's node, -1: Detective's node, 0: unoccupied
         self.nodes = [(node_index, {"position": node_positions[node_index], "type": "no_type", "occupied": 0}) for node_index in
                       self.node_indices]
+        self.edges = edges
 
         self.board = Board(self.nodes, self.edges)
 
-        self.edges = edges
         self.num_edges = len(edges)
         self.num_edges_detectives = self.board.detectives_network.number_of_edges()
 
@@ -83,7 +83,7 @@ class Game:
         return mister_x, detectives
 
     def getInitBoard(self):
-        # return initial board (numpy board)
+        # return initial board
         init_board = Board(self.nodes, self.edges)
         return init_board
 
@@ -148,9 +148,7 @@ class Game:
                 return -1
         return 0
 
-    def get_canonical_form(self, player_name):
-        # return state if player==1, else return -state if player==-1
-
+    def get_canonical_form(self, board, player_name):
         if player_name == "Mister_x":
             return self.board.mister_x_network
         else:

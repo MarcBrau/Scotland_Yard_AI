@@ -220,9 +220,6 @@ class Board:
 
         return distances, shortest_paths, transportation_types
 
-    def tostring(self):
-        return self.pieces
-
     def move_player(self, move, player):
         # Todo: Implement, therefore define how move looks like
         return 0
