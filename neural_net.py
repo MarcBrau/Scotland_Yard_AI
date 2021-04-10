@@ -8,7 +8,7 @@ import tensorflow as tf
 
 sys.path.append('../../')
 from utils import average_meter
-from NeuralNet import NeuralNet
+#from NeuralNet import NeuralNet
 
 from scotland_yard_nnet import ScotlandYardNNet as synnet
 
@@ -21,7 +21,7 @@ args = dict({
 })
 
 
-class NNetWrapper(NeuralNet):
+class NNetWrapper:
     def __init__(self, game, is_mister_x=False):
         self.nnet = synnet(game, args, is_mister_x)
 
