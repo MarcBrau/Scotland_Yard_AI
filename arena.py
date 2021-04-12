@@ -41,6 +41,7 @@ class Arena:
         players = [self.mister_x] + self.detectives
         cur_player_index = 0
         cur_player_name = self.game.players[cur_player_index].name
+        current_player = self.game.players[cur_player_index]
         board = self.game.get_init_board()
         it = 0
         while self.game.is_game_over(verbose=1) == 0:
@@ -50,10 +51,10 @@ class Arena:
                 print("Turn ", str(it), "Player ", str(cur_player_index))
                 self.display()
 
-            canon_board = self.game.get_canonical_form(board, cur_player_name)
-            action = players[cur_player_index](self.game.get_canonical_form(board, cur_player_name), self.game.players[cur_player_index])
+            canon_board = self.game.get_canonical_form(board, current_player)
+            action = players[cur_player_index](self.game.get_canonical_form(board, current_player), current_player)
 
-            valids = self.game.get_valid_moves(self.game.players[cur_player_index])
+            valids = self.game.get_valid_moves(current_player)
 
             if valids[action] == 0:
                 log.error(f'Action {action} is not valid!')

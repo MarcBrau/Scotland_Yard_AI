@@ -82,13 +82,14 @@ class Game:
 
         return mister_x, detectives
 
-    def getInitBoard(self):
+    def get_init_board(self):
         # return initial board
         init_board = Board(self.nodes, self.edges)
         return init_board
 
     def stringRepresentation(self, board):
-        return board.tostring()
+        #return str(board.adj)
+        return str(board)
 
     """def play_game(self, move_by_human=False):
 
@@ -149,17 +150,30 @@ class Game:
         return 0
 
     def get_canonical_form(self, board, player_name):
+        canon_form = [0] * len(board.mister_x_network.nodes)
+        if player_name == "Mister_X":
+            for player in self.players:
+                if player.name != player_name:
+                    canon_form[player.position] = 1
+
+        """
         if player_name == "Mister_x":
             return self.board.mister_x_network
         else:
             return self.board.detectives_network
+        """
+
+        return np.array(canon_form)
 
     def get_valid_moves(self, player):
         """
 
         :return: Fixed size binary vector
         """
-        valid_moves = [0] * len(range(self.num_nodes))
+        if player.name == 'Mister_X':
+            valid_moves = [0] * len(range(self.num_edges))
+        else:
+            valid_moves = [0] * len(range(self.num_edges_detectives))
         # Get all neighbored nodes of the player
         neighbors, connection_types = self.board.get_neighbors(player)
         # From the neighbors, delete all which cannot be reached
@@ -170,12 +184,12 @@ class Game:
         # Todo: what happens when there are no valid moves
         return np.array(valid_moves)
 
-    def get_action_size(self, is_mister_x):
+    def get_action_size(self, player_name):
         """
         Used to define the number of neurons in the output layer of the neural network
         :return:
         """
-        if is_mister_x:
+        if player_name == 'Mister_X':
             return self.num_edges
         else:
             return self.num_edges_detectives
