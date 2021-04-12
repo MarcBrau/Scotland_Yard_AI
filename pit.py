@@ -80,7 +80,7 @@ neural_net_mister_x = NNet(game, is_mister_x=True)
 
 args1 = dict({'numMCTSSims': 50, 'cpuct': 1.0})
 mcts1 = MCTS(game, neural_net_mister_x, args1)
-n1p = lambda x: np.argmax(mcts1.get_action_prob(x, temp=0))
+n1p = lambda x, y: np.argmax(mcts1.get_action_prob(x, y, temp=0))
 
 """human_vs_cpu = False
 if human_vs_cpu:
@@ -99,7 +99,7 @@ neural_net_detective = NNet(game, is_mister_x=False)
 # n2.load_checkpoint('')
 args2 = dict({'numMCTSSims': 50, 'cpuct': 1.0})
 mcts2 = MCTS(game, neural_net_detective, args2)
-n2p = lambda x: np.argmax(mcts2.get_action_prob(x, temp=0))
+n2p = lambda x, y: np.argmax(mcts2.get_action_prob(x, y, temp=0))
 for i in range(number_of_detectives):
     neural_net_detectives.append(n2p)
 
