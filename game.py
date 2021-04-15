@@ -170,26 +170,23 @@ class Game:
 
         :return: Fixed size binary vector
         """
-        if player.name == 'Mister_X':
-            valid_moves = [0] * len(range(self.num_edges))
-        else:
-            valid_moves = [0] * len(range(self.num_edges_detectives))
-        # Get all neighbored nodes of the player
+
+        # Get the indices of all neighboring nodes of the player
         neighbors, connection_types = self.board.get_neighbors(player)
         # From the neighbors, delete all which cannot be reached
         valid_neighbors, valid_connection_types = self.board.get_valid_neighbors(player, self.detectives, neighbors, connection_types)
-        # Todo: Find list comprehension for this
-        for neighbor in valid_neighbors:
-            valid_moves[neighbor] = 1
+
+        # Create a binary vector indicating the valid edges
+        valid_moves = self.board.get_valid_edges(player, valid_neighbors)
         # Todo: what happens when there are no valid moves
         return np.array(valid_moves)
 
-    def get_action_size(self, player_name):
+    def get_action_size(self, is_mister_x):
         """
         Used to define the number of neurons in the output layer of the neural network
         :return:
         """
-        if player_name == 'Mister_X':
+        if is_mister_x:
             return self.num_edges
         else:
             return self.num_edges_detectives
@@ -204,13 +201,11 @@ class Game:
         # if action == self.n*self.n:
         #    return (board, -player)
 
-        # Todo: Convert action to move
-        # move = (int(action/self.n), action%self.n)
         self.board.move_player(action, player)
         # Todo: How to get next player, outside of this routine, something like:
         # for player in players:
         # get_next_state(player, action)...
-        return self.board.pieces, -player
+        return self.board, player
 
     def display(self):
         draw_graph_and_players(self.board.mister_x_network, self.mister_x, self.detectives, by_human=False)

@@ -19,17 +19,17 @@ class Board:
 
         # Initialize different networks
         self.mister_x_network = nx.MultiGraph(name="mister_x_network")
-        mister_x_nodes = [node for node in nodes]
-        mister_x_edges = [edge for edge in edges]
+        self.mister_x_nodes = [node for node in nodes]
+        self.mister_x_edges = [edge for edge in edges]
 
-        self.mister_x_network.add_nodes_from(mister_x_nodes)
-        self.mister_x_network.add_edges_from(mister_x_edges)
+        self.mister_x_network.add_nodes_from(self.mister_x_nodes)
+        self.mister_x_network.add_edges_from(self.mister_x_edges)
 
         self.detectives_network = nx.MultiGraph(name="detectives_network")
-        detectives_nodes = [node for node in nodes if node[1]["type"] != "ferry"]
-        detectives_edges = [edge for edge in edges if edge[2]["type"] != "ferry"]
-        self.detectives_network.add_nodes_from(detectives_nodes)
-        self.detectives_network.add_edges_from(detectives_edges)
+        self.detectives_nodes = [node for node in nodes if node[1]["type"] != "ferry"]
+        self.detectives_edges = [edge for edge in edges if edge[2]["type"] != "ferry"]
+        self.detectives_network.add_nodes_from(self.detectives_nodes)
+        self.detectives_network.add_edges_from(self.detectives_edges)
 
         self.networks = [self.mister_x_network, self.detectives_network]
 
@@ -164,6 +164,22 @@ class Board:
 
         return valid_neighbors, valid_connection_types
 
+    def get_valid_edges(self, player, valid_neighbors):
+
+        if player.name == 'Mister_X':
+            valid_edges = [0] * len(self.mister_x_edges)
+            edges = self.mister_x_edges
+        else:
+            valid_edges = [0] * len(self.detectives_edges)
+            edges = self.detectives_edges
+
+        for edge_index, edge in enumerate(edges):
+            for valid_index in valid_neighbors:
+                if (player.position, valid_index) == edge[0:2]:
+                    valid_edges[edge_index] = 1
+
+        return valid_edges
+
     def calculate_shortest_paths(self, mister_x, detectives, for_detectives=False):
         distances = {}
         shortest_paths = {}
@@ -220,6 +236,15 @@ class Board:
 
         return distances, shortest_paths, transportation_types
 
-    def move_player(self, move, player):
-        # Todo: Implement, therefore define how move looks like
-        return 0
+    def move_player(self, action, player):
+        # Convert action to move, i.e. action is an integer index that defines which edge should be used for the move
+
+        if player.name == "Mister_X":
+            edges = self.mister_x_edges
+        else:
+            edges = self.detectives_edges
+
+        selected_nodes = edges[action][0:2]
+        target_node_index = [node_index for node_index in selected_nodes if node_index != player.position][0]
+
+        player.set_new_position(target_node_index)
