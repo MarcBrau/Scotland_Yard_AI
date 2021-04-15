@@ -40,7 +40,12 @@ class ScotlandYardNNet:
         dense_3 = layers.Dense(1)(drop_2)
         self.v = Tanh(dense_3)
 
-        self.model = keras.models.Model(inputs=input_layer, outputs=[self.pi, self.v])
+        if is_mister_x:
+            model_name = "Mister_X_Net"
+        else:
+            model_name = "Detective_Net"
+
+        self.model = keras.models.Model(inputs=input_layer, outputs=[self.pi, self.v], name=model_name)
 
         print(self.model.summary())
 
