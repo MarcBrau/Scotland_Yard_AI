@@ -132,8 +132,7 @@ class Game:
     def is_game_over(self, verbose=0):
         """
         Return 1 if mister_x won, -1 if detectives won, 0 if game is not over
-        :param mister_x:
-        :param detectives:
+        :param verbose:
         :return:
         """
         # Todo: Set correct conditions to end the game
@@ -149,11 +148,11 @@ class Game:
                 return -1
         return 0
 
-    def get_canonical_form(self, board, player_name):
+    def get_canonical_form(self, board, current_player):
         canon_form = [0] * len(board.mister_x_network.nodes)
-        if player_name == "Mister_X":
+        if current_player.name == "Mister_X":
             for player in self.players:
-                if player.name != player_name:
+                if player.name != current_player.name:
                     canon_form[player.position] = 1
 
         """
