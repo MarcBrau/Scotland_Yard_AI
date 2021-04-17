@@ -8,11 +8,10 @@ class Detective(Player):
         Player.__init__(self, start_position=start_position, color=color)
 
         # Set number of tickets
-        self.num_taxi_tickets = num_taxi_tickets
-        self.num_bus_tickets = num_bus_tickets
-        self.num_metro_tickets = num_metro_tickets
-        self.needs_tickets = needs_tickets
-        self.index = index
+        self.tickets = {"taxi": num_taxi_tickets, "bus": num_bus_tickets, "metro": num_metro_tickets}
+
+        # Create ticket history which gets filled with the used tickets
+        self.ticket_history = []
         self.name = "Detective"
 
     def can_move(self, ticket_type):
