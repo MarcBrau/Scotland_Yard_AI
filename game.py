@@ -87,7 +87,7 @@ class Game:
         init_board = Board(self.nodes, self.edges)
         return init_board
 
-    def stringRepresentation(self, board):
+    def string_representation(self, board):
         #return str(board.adj)
         return str(board)
 
@@ -205,7 +205,11 @@ class Game:
         # Todo: How to get next player, outside of this routine, something like:
         # for player in players:
         # get_next_state(player, action)...
-        return self.board, player
+        curr_index = self.players.index(player)
+        if curr_index == len(self.players) - 1:
+            curr_index = -1
+        next_player = self.players[curr_index + 1]
+        return self.board, next_player
 
     def display(self):
         draw_graph_and_players(self.board.mister_x_network, self.mister_x, self.detectives, by_human=False)

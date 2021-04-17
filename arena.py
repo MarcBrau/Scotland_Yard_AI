@@ -52,7 +52,7 @@ class Arena:
                 self.display()
 
             canon_board = self.game.get_canonical_form(board, current_player)
-            action = players[cur_player_index](self.game.get_canonical_form(board, current_player), current_player)
+            action = players[cur_player_index](canon_board, current_player)
 
             valids = self.game.get_valid_moves(current_player)
 

@@ -36,7 +36,7 @@ class MCTS:
         for i in range(self.args['numMCTSSims']):
             self.search(canonical_board, current_player)
 
-        s = self.game.stringRepresentation(canonical_board)
+        s = self.game.string_representation(canonical_board)
         counts = [self.num_s_a[(s, a)] if (s, a) in self.num_s_a else 0 for a in range(self.game.getActionSize())]
 
         if temp == 0:
@@ -71,7 +71,7 @@ class MCTS:
             v: the negative of the value of the current canonical_board
         """
 
-        s = self.game.stringRepresentation(canonicalBoard)
+        s = self.game.string_representation(canonicalBoard)
 
         if s not in self.Es:
             self.Es[s] = self.game.is_game_over(verbose=1)
