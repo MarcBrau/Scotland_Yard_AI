@@ -70,13 +70,13 @@ detective_colors = ['green', 'red']
 mister_x_color = 'grey'
 game = Game(number_of_nodes, edges, number_of_detectives, mister_x_color, detective_colors)
 
-
 # Players for Mister X
-#random_player = RandomPlayer(game).play
-#greedy_player = GreedyPlayer(game).play
-human_player = HumanPlayer(game).play
-neural_net_mister_x = NNet(game, is_mister_x=True)
+# random_player = RandomPlayer(game).play
+# greedy_player = GreedyPlayer(game).play
+# human_player = HumanPlayer(game).play
+neural_net_mister_x = NNet(game, player=game.mister_x)
 # neural_net_player.load_checkpoint('')
+game.mister_x.neural_net = neural_net_mister_x
 
 args1 = dict({'numMCTSSims': 50, 'cpuct': 1.0})
 mcts1 = MCTS(game, neural_net_mister_x, args1)
@@ -95,12 +95,13 @@ else:
     player2 = n2p  # Player 2 is neural network if it's cpu vs cpu.
 """
 neural_net_detectives = []
-neural_net_detective = NNet(game, is_mister_x=False)
+neural_net_detective = NNet(game, game.detectives[0])
 # n2.load_checkpoint('')
 args2 = dict({'numMCTSSims': 50, 'cpuct': 1.0})
 mcts2 = MCTS(game, neural_net_detective, args2)
 n2p = lambda x, y: np.argmax(mcts2.get_action_prob(x, y, temp=0))
 for i in range(number_of_detectives):
+    game.detectives[i].neural_net = neural_net_detective
     neural_net_detectives.append(n2p)
 
 arena = arena.Arena(n1p, neural_net_detectives, game, display=game.display)
