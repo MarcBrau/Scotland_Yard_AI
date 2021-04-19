@@ -22,8 +22,8 @@ args = dict({
 
 
 class NNetWrapper:
-    def __init__(self, game, is_mister_x=False):
-        self.nnet = synnet(game, args, is_mister_x)
+    def __init__(self, game, player):
+        self.nnet = synnet(game, args, player)
 
     def train(self, examples):
         """

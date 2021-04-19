@@ -9,10 +9,10 @@ layers = keras.layers
 
 
 class ScotlandYardNNet:
-    def __init__(self, game, args, is_mister_x):
+    def __init__(self, game, args, player):
         # game params
         # self.board_x, self.board_y = game.getBoardSize()
-        self.action_size = game.get_action_size(is_mister_x)
+        self.action_size = game.get_action_size(player)
         self.board_size = game.get_board_size()
         self.args = args
 
@@ -40,7 +40,7 @@ class ScotlandYardNNet:
         dense_3 = layers.Dense(1)(drop_2)
         self.v = Tanh(dense_3)
 
-        if is_mister_x:
+        if player.name == "Mister_X":
             model_name = "Mister_X_Net"
         else:
             model_name = "Detective_Net"
