@@ -51,7 +51,7 @@ class MCTS:
         probs = [x / counts_sum for x in counts]
         return probs
 
-    def search(self, canonicalBoard, current_player):
+    def search(self, canonical_board, current_player):
         """
         This function performs one iteration of MCTS. It is recursively called
         till a leaf node is found. The action chosen at each node is one that
@@ -71,7 +71,7 @@ class MCTS:
             v: the negative of the value of the current canonical_board
         """
 
-        s = self.game.string_representation(canonicalBoard)
+        s = self.game.string_representation(canonical_board)
 
         if s not in self.Es:
             self.Es[s] = self.game.is_game_over(verbose=1)
@@ -81,7 +81,8 @@ class MCTS:
 
         if s not in self.nnet_policy_s:
             # leaf node
-            self.nnet_policy_s[s], v = self.neural_net.predict(canonicalBoard)
+            self.nnet_policy_s[s], v = current_player.neural_net.predict(canonical_board)
+
             valids = self.game.get_valid_moves(current_player)
             self.nnet_policy_s[s] = self.nnet_policy_s[s] * valids  # masking invalid moves
             sum_Ps_s = np.sum(self.nnet_policy_s[s])
@@ -106,7 +107,7 @@ class MCTS:
         best_act = -1
 
         # pick the action with the highest upper confidence bound
-        for a in range(self.game.get_action_size(current_player.name)):
+        for a in range(self.game.get_action_size(current_player)):
             if valids[a]:
                 if (s, a) in self.q_values_s_a:
                     u = self.q_values_s_a[(s, a)] + self.args['cpuct'] * self.nnet_policy_s[s][a] * math.sqrt(self.num_s[s]) / (
