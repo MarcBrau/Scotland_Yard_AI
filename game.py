@@ -150,17 +150,12 @@ class Game:
 
     def get_canonical_form(self, board, current_player):
         canon_form = [0] * len(board.mister_x_network.nodes)
-        if current_player.name == "Mister_X":
-            for player in self.players:
-                if player.name != current_player.name:
-                    canon_form[player.position] = 1
 
-        """
-        if player_name == "Mister_x":
-            return self.board.mister_x_network
-        else:
-            return self.board.detectives_network
-        """
+        # Todo: Find good way for detectives when Mister X is not visible
+        # if current_player.name == "Mister_X":
+        for player in self.players:
+            if player.name != current_player.name:
+                canon_form[player.position] = 1
 
         return np.array(canon_form)
 
@@ -180,12 +175,12 @@ class Game:
         # Todo: what happens when there are no valid moves
         return np.array(valid_moves)
 
-    def get_action_size(self, is_mister_x):
+    def get_action_size(self, player):
         """
         Used to define the number of neurons in the output layer of the neural network
         :return:
         """
-        if is_mister_x:
+        if player.name == "Mister_X":
             return self.num_edges
         else:
             return self.num_edges_detectives
