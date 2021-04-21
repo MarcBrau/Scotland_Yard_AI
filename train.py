@@ -1,6 +1,6 @@
 import logging
 
-from Coach import Coach
+from coach import Coach
 from game import Game
 from neural_net import NNetWrapper as NNet
 from utils import *
