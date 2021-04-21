@@ -159,6 +159,9 @@ class Game:
 
         return np.array(canon_form)
 
+    def get_symmetries(self, board, pi, player):
+        return [(board,pi)]
+
     def get_valid_moves(self, player):
         """
 
