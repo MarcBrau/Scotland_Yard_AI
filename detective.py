@@ -13,6 +13,7 @@ class Detective(Player):
         # Create ticket history which gets filled with the used tickets
         self.ticket_history = []
         self.name = "Detective"
+        self.index = index
 
     def can_move(self, ticket_type):
 
