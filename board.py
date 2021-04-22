@@ -175,7 +175,7 @@ class Board:
 
         for edge_index, edge in enumerate(edges):
             for valid_index in valid_neighbors:
-                if (player.position, valid_index) == edge[0:2]:
+                if {player.position, valid_index} == set(edge[0:2]):
                     valid_edges[edge_index] = 1
 
         return valid_edges
