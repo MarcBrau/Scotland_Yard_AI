@@ -135,6 +135,9 @@ class Game:
         :param verbose:
         :return:
         """
+        draw_graph_and_players(self.board.mister_x_network, self.mister_x, self.detectives, by_human=True)
+
+
         # Todo: Set correct conditions to end the game
         if self.round_index == 24:
             if verbose:
@@ -160,7 +163,7 @@ class Game:
         return np.array(canon_form)
 
     def get_symmetries(self, board, pi, player):
-        return [(board,pi)]
+        return [(board, pi)]
 
     def get_valid_moves(self, player):
         """
@@ -199,12 +202,14 @@ class Game:
         #    return (board, -player)
 
         self.board.move_player(action, player)
+
         # Todo: How to get next player, outside of this routine, something like:
         # for player in players:
         # get_next_state(player, action)...
         curr_index = self.players.index(player)
         if curr_index == len(self.players) - 1:
             curr_index = -1
+            self.round_index += 1
         next_player = self.players[curr_index + 1]
         return self.board, next_player
 
