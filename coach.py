@@ -65,7 +65,7 @@ class Coach:
                 trainExamples.append([b, self.current_player, p, None])
 
             action = np.random.choice(len(pi), p=pi)
-            board, self.current_player = self.game.get_next_state(board, self.current_player, action)
+            board, self.current_player = self.game.get_next_state(self.current_player, action)
 
             r = self.game.is_game_over()
 

@@ -37,7 +37,7 @@ class MCTS:
             self.search(canonical_board, current_player)
 
         s = self.game.string_representation(canonical_board)
-        counts = [self.num_s_a[(s, a)] if (s, a) in self.num_s_a else 0 for a in range(self.game.getActionSize())]
+        counts = [self.num_s_a[(s, a)] if (s, a) in self.num_s_a else 0 for a in range(self.game.get_action_size(current_player))]
 
         if temp == 0:
             bestAs = np.array(np.argwhere(counts == np.max(counts))).flatten()
